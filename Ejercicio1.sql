@@ -113,10 +113,9 @@
     
 -- Consultas con Having
 	-- Hallar los departamentos que tienen más de tres empleados. Mostrar el número de empleados de esos departamentos.
-    select d.nombre_depto 'Departamento', COUNT(*) 'Numero empleados'
+    select e.id_depto 'Departamento', COUNT(*) 'Numero empleados'
 	from empleados e
-	join departamentos d on e.id_depto = d.id_depto
-	group by d.nombre_depto
+	group by e.id_depto
 	having COUNT(*) > 3;
     
     -- Hallar los departamentos que no tienen empleados
@@ -126,6 +125,13 @@
 	group by d.nombre_depto
 	having COUNT(*) = 0;
     
+    select d.nombre_depto 'Departamento', COUNT(*) 'Numero empleados'
+	from empleados e, departamentos d
+    where e.id_depto = d.id_depto
+	group by e.id_depto
+	having COUNT(*)  = 0;
+    
+    
 -- Consulta Multitabla
 	-- Mostrar la lista de empleados, con su respectivo departamento y el jefe de cada departamento.
     select e.nombre 'Empleado' , d.nombre_depto 'Departamento', d.nombre_jefe_depto 'Jefe de Departamento'
@@ -134,8 +140,8 @@
     
 -- Consulta con Subconsulta
 	-- Mostrar la lista de los empleados cuyo salario es mayor o igual que el promedio de la empresa. Ordenarlo por departamento.
-    select e.nombre 'Empleado', e.sal_emp 'Salario', d.nombre_depto
+    select e.nombre 'Empleado', e.sal_emp 'Salario', d.nombre_depto 
 	from empleados e
 	join departamentos d on e.id_depto = d.id_depto
-	where e.sal_emp >= (select avg(sal_emp) from empleados)
+	where e.sal_emp >= (select avg(sal_emp) from empleados )
 	order by d.nombre_depto asc;

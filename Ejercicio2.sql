@@ -121,6 +121,7 @@
         select f.codigo 'Codigo Fabricante' , f.nombre 'Fabricante' , p.nombre 'Producto' , p.precio 'Precio'
         from fabricante f
         left join producto p on f.codigo = p.codigo_fabricante;
+        
 		
 		-- Devuelve un listado donde sólo aparezcan aquellos fabricantes que no tienen ningún producto asociado.
         select f.codigo 'Codigo Fabricante' , f.nombre 'Fabricante' , p.nombre 'Producto' , p.precio 'Precio'
