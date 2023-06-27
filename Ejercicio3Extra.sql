@@ -90,11 +90,11 @@
     group by m.id_tipo;
     
 -- 13. Mostrar todos los movimientos que puedan envenenar.
-	select m.id_tipo 'Id Tipo', t.nombre 'Nombre', count(*) 'Cantidad de movimientos'
+	select m.id_tipo 'Id Tipo', m.nombre 'Nombre'
     from movimiento m
     join tipo t on t.id_tipo = m.id_tipo
     where t.nombre like 'Ven%'
-    group by m.id_tipo;
+    group by m.id_tipo, m.nombre;
     
 -- 14. Mostrar todos los movimientos que causan daño, ordenados alfabéticamente por nombre.
 	select m.id_tipo 'Id Tipo', t.nombre 'Nombre'
@@ -104,11 +104,51 @@
 	group by m.id_tipo, m.descripcion;
 
 -- 15. Mostrar todos los movimientos que aprende pikachu.
-	
+	select m.id_movimiento, m.nombre
+    from pokemon p
+    join pokemon_tipo pt on pt.numero_pokedex = p.numero_pokedex
+    join movimiento m on m.id_tipo = pt.id_tipo
+    where p.nombre = 'pikachu';
 	
 -- 16. Mostrar todos los movimientos que aprende pikachu por MT (tipo de aprendizaje).
+	select m.id_movimiento, m.nombre 'Movimiento', fa.id_forma_aprendizaje
+    from movimiento m
+    join pokemon_movimiento_forma pmf on pmf.id_movimiento = m.id_movimiento
+    join forma_aprendizaje fa on fa.id_forma_aprendizaje = pmf.id_forma_aprendizaje
+    where pmf.numero_pokedex = 25 and fa.id_tipo_aprendizaje = 1;
+ 
 -- 17. Mostrar todos los movimientos de tipo normal que aprende pikachu por nivel.
+	select m.id_movimiento, m.nombre 'Movimiento', fa.id_forma_aprendizaje
+    from movimiento m
+    join pokemon_movimiento_forma pmf on pmf.id_movimiento = m.id_movimiento
+    join forma_aprendizaje fa on fa.id_forma_aprendizaje = pmf.id_forma_aprendizaje
+    join tipo t on t.id_tipo = m.id_tipo
+    where pmf.numero_pokedex = 25 and fa.id_tipo_aprendizaje = 3 and t.nombre like 'normal';
+    
 -- 18. Mostrar todos los movimientos de efecto secundario cuya probabilidad sea mayor al 30%.
+	select m.nombre 'Movimiento', es.efecto_secundario 'Efecto secundario', mes.probabilidad 'Probabilidad'
+    from movimiento m
+    join movimiento_efecto_secundario mes on mes.id_movimiento = m.id_movimiento
+    join efecto_secundario es on es.id_efecto_secundario = mes.id_efecto_secundario
+    where mes.probabilidad > 30;
+    
 -- 19. Mostrar todos los pokemon que evolucionan por piedra.
+	select distinct p.numero_pokedex 'Pokedex', p.nombre 'Pokemones'
+    from pokemon p
+    join pokemon_forma_evolucion pfe on pfe.numero_pokedex = p.numero_pokedex
+    join forma_evolucion fe on fe.id_forma_evolucion = pfe.id_forma_evolucion
+    join piedra pie on pie.id_forma_evolucion = fe.id_forma_evolucion
+    join tipo_piedra tp on tp.id_tipo_piedra = pie.id_tipo_piedra;
+    
 -- 20. Mostrar todos los pokemon que no pueden evolucionar.
+	select *
+    from pokemon p
+    left join evoluciona_de ed on ed.pokemon_origen = p.numero_pokedex
+    where ed.pokemon_origen is null;
+    
 -- 21. Mostrar la cantidad de los pokemon de cada tipo.
+	select t.nombre 'Tipo', count(pt.numero_pokedex)
+    from pokemon p
+    join pokemon_tipo pt on pt.numero_pokedex = p.numero_pokedex
+    join tipo t on t.id_tipo = pt.id_tipo
+    group by pt.id_tipo;
